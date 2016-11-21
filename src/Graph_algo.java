@@ -83,4 +83,7 @@ public class Graph_algo {
             graph[i].isDone = false;
         }
     }
+    public void ss(){
+        int a=0;
+    }
 }
