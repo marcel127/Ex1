@@ -22,7 +22,7 @@ public class Graph {
     PriorityQueue<Vertex> queue;
 
     public Graph() {
-        this.numOfNodes = 0;
+        this.numOfNodes =  0;
         this.numOfEdges = 0;
         this.queue = new PriorityQueue<>();
     }
