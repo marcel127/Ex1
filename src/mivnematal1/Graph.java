@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package mivnematal1;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -27,7 +28,7 @@ public class Graph {
         this.queue = new PriorityQueue<>();
     }
 
-    public void readGraph(String fileName) {
+    public Vertex[] readGraph(String fileName) {
         String s = "";
         int nodeI = 0, nodeJ = 0;
         double weight = 0;
@@ -57,12 +58,12 @@ public class Graph {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return this.graph;
     }
 
     public static void main(String[] args) {
         Graph g = new Graph();
-        g.readGraph("B:\\ליאת\\מדמח\\מבנה תוכנה\\G0.txt");
+        g.readGraph("B:\\ליאת\\מדמח\\מבנה תוכנה\\G000.txt");
     }
 }
 
@@ -100,7 +101,7 @@ class Vertex implements Comparable<Vertex> {
             return -1;
         }
         return 0;
-        
+
     }
 
 }

@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package mivnematal1;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,17 +28,20 @@ public class Graph_algo {
         queue.add(graph[root]);
 
         while (!queue.isEmpty()) {
-            Vertex v = queue.poll();  //get the min vertex 
+            Vertex v = queue.poll();  //get the min vertex
             for (int i = 0; i < v.neighbors.size(); i++) {//go throgh all the neigbors
                 Vertex u = v.neighbors.elementAt(i).vertex;
-                double Uweight = v.neighbors.elementAt(i).weight;
-                double VUweight = v.minDistance + Uweight;
-                if (VUweight < u.minDistance) {
-                    u.parent = v;
-                    u.minDistance = VUweight;
-                    queue.remove(u);
-                    queue.add(u);
+                if(u.isDone==false){
+                    double Uweight = v.neighbors.elementAt(i).weight;
+                    double VUweight = v.minDistance + Uweight;
+                    if (VUweight < u.minDistance) {
+                        u.parent = v;
+                        u.minDistance = VUweight;
+                        queue.remove(u);
+                        queue.add(u);
+                    }
                 }
+
             }
             v.isDone = true;
         }
@@ -83,7 +87,55 @@ public class Graph_algo {
             graph[i].isDone = false;
         }
     }
-    public void ss(){
-        int a=0;
+
+    public double []findDiameter(){
+        double max=0, min=Integer.MAX_VALUE;
+        int node1=0, node2=0;
+        for(int i=0; i<graph.length; i++){
+            reset();
+            dijikstraAlgo(i);
+            for(int j=0; j<graph.length; j++){
+                if(graph[j].minDistance>max){
+                    node1=i;
+                    node2=j;
+                    max=graph[j].minDistance;
+                }
+            }
+        }
+        return new double[]{node1,node2,max};
+    }
+
+    public double[] findRadius(){
+        double min=Integer.MAX_VALUE;
+        int node1=0, node2=0;
+        for(int i=0; i<graph.length; i++){
+            reset();
+            dijikstraAlgo(i);
+            double tmpMax=0;
+            int tmpNode1=0, tmpNode2=0;
+            for(int j=0; j<graph.length; j++){
+                if(graph[j].minDistance>tmpMax){
+                    tmpMax=graph[j].minDistance;
+                    tmpNode1=i;
+                    tmpNode2=j;
+                }
+            }
+            if(tmpMax<min){
+                node1=tmpNode1;
+                node2=tmpNode2;
+                min=tmpMax;
+            }
+        }
+        return new double[]{node1,node2,min};
+    }
+    public static void main(String[] args){
+        Graph g= new Graph();
+        Vertex[] tmp=g.readGraph("B:\\ליאת\\מדמח\\מבנה תוכנה\\G000.txt");
+        Graph_algo graph= new Graph_algo(tmp);
+
+        double[] ans=graph.findRadius();
+        System.out.println("node1: "+ans[0]);
+        System.out.println("node2: "+ ans[1]);
+        System.out.println("ans: "+ans[2]);
     }
 }
