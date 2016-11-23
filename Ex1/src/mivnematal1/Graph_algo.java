@@ -117,7 +117,7 @@ public class Graph_algo {
 
     /**
      * 
-     * @return 
+     * @return the diameter of the graph
      */
     public double[] findDiameter() {
         double max = 0, min = Integer.MAX_VALUE;
@@ -136,6 +136,10 @@ public class Graph_algo {
         return new double[]{node1, node2, max};
     }
 
+    /**
+     * 
+     * @return the radius of the graph 
+     */
     public double[] findRadius() {
         double min = Integer.MAX_VALUE;
         int node1 = 0, node2 = 0;
@@ -160,6 +164,10 @@ public class Graph_algo {
         return new double[]{node1, node2, min};
     }
 
+    /**
+     * 
+     * @return true if all the triangles in the graph are triangle Inequality, false otherwise
+     */
     public boolean isTriangleInequality() {
         boolean TIE= true;
         for(int i=0; TIE&& i<graph.length; i++){
@@ -237,7 +245,6 @@ public class Graph_algo {
         Graph g = new Graph();
         Nodes[] tmp = g.readGraphFromFile("B:\\ליאת\\מדמח\\מבנה תוכנה\\G000.txt");
         Graph_algo graph = new Graph_algo(tmp);
-
         double[] ans = graph.findRadius();
         System.out.println("node1: " + ans[0]);
         System.out.println("node2: " + ans[1]);
