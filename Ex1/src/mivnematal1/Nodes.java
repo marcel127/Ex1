@@ -19,12 +19,12 @@ import java.util.Vector;
  */
 
 public class Nodes implements Comparable<Nodes> {
-///להפוך הכל לפרייוט
-    int name;
-    Vector <Edge> neighbors; //all the edges connected to this node (list of the other node and the weight)
-    double minDistance;//the minimum distance from the given node to this node
-    Nodes parent;//the previus node in the shortest way
-    boolean isDone;
+
+    private int name;
+    private Vector <Edge> neighbors; //all the edges connected to this node (list of the other node and the weight)
+    private double minDistance;//the minimum distance from the given node to this node
+    private Nodes parent;//the previus node in the shortest way
+    private boolean isDone;
 
     public Nodes(int name) {
         this.name=name;
@@ -51,6 +51,28 @@ public class Nodes implements Comparable<Nodes> {
     public boolean getIsDone(){
         return isDone;
     }
+    
+    public void setName(int name){
+        this.name=name;
+    }
+    public void setMinDistance(double dis){
+        this.minDistance=dis;
+    }
+    
+    public void setNeighbors(Vector <Edge> neighbors){
+        this.neighbors=neighbors;
+    }
+    
+    public void setParent(Nodes parent){
+        this.parent=parent;
+    }
+    
+    public void setIsDone(boolean isDone){
+        this.isDone=isDone;
+    }
+    
+    
+    
     @Override
     public int compareTo(Nodes other) {
         if(this.minDistance>other.minDistance){

@@ -57,8 +57,8 @@ public class Graph {
                 nodeI = Integer.valueOf(st.nextToken());
                 nodeJ = Integer.valueOf(st.nextToken());
                 weight = Double.valueOf(st.nextToken());
-                graph[nodeI].neighbors.add(new Edge(graph[nodeJ], weight));//add the edge to the first node list
-                graph[nodeJ].neighbors.add(new Edge(graph[nodeI], weight));//add the edge to the second node list
+                graph[nodeI].getNeighbors().add(new Edge(graph[nodeJ], weight));//add the edge to the first node list
+                graph[nodeJ].getNeighbors().add(new Edge(graph[nodeI], weight));//add the edge to the second node list
                 System.out.println("<" + nodeI + ", " + nodeJ + ", " + weight + " >");
             }
             in.close();

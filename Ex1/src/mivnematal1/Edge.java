@@ -12,8 +12,8 @@ package mivnematal1;
 
 public class Edge {
 
-    double weight;
-    Nodes node;
+    private double weight;
+    private Nodes node;
 
     public Edge(Nodes v, double w) {
         weight = w;
@@ -26,5 +26,13 @@ public class Edge {
     
     public Nodes getNode(){
         return this.node;
+    }
+    
+    public void setWeight(double w){
+        this.weight=w;
+    }
+    
+    public void setNode(Nodes n){
+        this.node=n;
     }
 }

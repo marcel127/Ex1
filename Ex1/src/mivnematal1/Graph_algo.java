@@ -6,8 +6,11 @@
 package mivnematal1;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,12 +31,12 @@ public class Graph_algo {
     PriorityQueue<Nodes> queue;
     int numOfNodes;
     int numOfEdges;
-    
+
     public Graph_algo(Nodes[] g, int numOfNodes, int numOfEdges) {
         graph = g;
         queue = new PriorityQueue<>();
-        this.numOfEdges=numOfEdges;
-        this.numOfNodes=numOfNodes;
+        this.numOfEdges = numOfEdges;
+        this.numOfNodes = numOfNodes;
     }
 
     /**
@@ -43,25 +46,26 @@ public class Graph_algo {
      * @param root the start node
      */
     public void dijikstraAlgo(int root) {
-        graph[root].minDistance = 0;
+       
+        graph[root].setMinDistance(0);
         queue.add(graph[root]);
         while (!queue.isEmpty()) {
             Nodes v = queue.poll();  //get the min vertex 
-            for (int i = 0; i < v.neighbors.size(); i++) {//go throgh all the neigbors
-                Nodes u = v.neighbors.elementAt(i).node;
-                if (u.isDone == false) {
-                    double Uweight = v.neighbors.elementAt(i).weight;
-                    double VUweight = v.minDistance + Uweight;
-                    if (VUweight < u.minDistance) {
-                        u.parent = v;
-                        u.minDistance = VUweight;
+            for (int i = 0; i < v.getNeighbors().size(); i++) {//go throgh all the neigbors
+                Nodes u = v.getNeighbors().elementAt(i).getNode();
+                if (u.getIsDone() == false) {
+                    double Uweight = v.getNeighbors().elementAt(i).getWeight();
+                    double VUweight = v.getMinDistance() + Uweight;
+                    if (VUweight < u.getMinDistance()) {
+                        u.setParent(v);
+                        u.setMinDistance(VUweight);
                         queue.remove(u);
                         queue.add(u);
                     }
                 }
 
             }
-            v.isDone = true;
+            v.setIsDone(true);
         }
     }
 
@@ -75,7 +79,7 @@ public class Graph_algo {
     public double distanceBetweenTwoNodes(int nodeI, int nodeJ) {
         reset();
         dijikstraAlgo(nodeI);
-        return graph[nodeJ].minDistance;
+        return graph[nodeJ].getMinDistance();
     }
 
     /**
@@ -90,10 +94,10 @@ public class Graph_algo {
         dijikstraAlgo(nodeI);
         //int node = nodeJ;
         ArrayList<Integer> list = new ArrayList<>();
-        list.add(graph[nodeJ].name);
-        while (graph[nodeJ].parent != null) {
-            list.add(graph[nodeJ].parent.name);
-            nodeJ = graph[nodeJ].parent.name;
+        list.add(graph[nodeJ].getName());
+        while (graph[nodeJ].getParent() != null) {
+            list.add(graph[nodeJ].getParent().getName());
+            nodeJ = graph[nodeJ].getParent().getName();
         }
 
         Collections.reverse(list);
@@ -113,10 +117,10 @@ public class Graph_algo {
     public double distanceWithBlackList(int nodeI, int nodeJ, ArrayList<Integer> blackList) {
         reset();
         for (int i = 0; i < blackList.size(); i++) {
-            graph[blackList.get(i)].isDone = true;
+            graph[blackList.get(i)].setIsDone(true);
         }
         dijikstraAlgo(nodeI);
-        return graph[nodeJ].minDistance;
+        return graph[nodeJ].getMinDistance();
     }
 
     /**
@@ -124,9 +128,9 @@ public class Graph_algo {
      */
     public void reset() {
         for (int i = 0; i < graph.length; i++) {
-            graph[i].minDistance = Integer.MAX_VALUE;
-            graph[i].parent = null;
-            graph[i].isDone = false;
+            graph[i].setMinDistance(Integer.MAX_VALUE);
+            graph[i].setParent(null);
+            graph[i].setIsDone(false);
         }
     }
 
@@ -141,10 +145,10 @@ public class Graph_algo {
             reset();
             dijikstraAlgo(i);
             for (int j = 0; j < graph.length; j++) {
-                if (graph[j].minDistance > max) {
+                if (graph[j].getMinDistance() > max) {
                     node1 = i;
                     node2 = j;
-                    max = graph[j].minDistance;
+                    max = graph[j].getMinDistance();
                 }
             }
         }
@@ -164,8 +168,8 @@ public class Graph_algo {
             double tmpMax = 0;
             int tmpNode1 = 0, tmpNode2 = 0;
             for (int j = 0; j < graph.length; j++) {
-                if (graph[j].minDistance > tmpMax) {
-                    tmpMax = graph[j].minDistance;
+                if (graph[j].getMinDistance() > tmpMax) {
+                    tmpMax = graph[j].getMinDistance();
                     tmpNode1 = i;
                     tmpNode2 = j;
                 }
@@ -189,8 +193,8 @@ public class Graph_algo {
         for (int i = 0; TIE && i < graph.length; i++) {
             reset();
             dijikstraAlgo(i);
-            for (int j = 0; TIE && j < this.graph[i].neighbors.size(); j++) {
-                if (graph[i].getNeighbors().elementAt(j).node.getMinDistance() != graph[i].getNeighbors().elementAt(j).weight) {
+            for (int j = 0; TIE && j < this.graph[i].getNeighbors().size(); j++) {
+                if (graph[i].getNeighbors().elementAt(j).getNode().getMinDistance() != graph[i].getNeighbors().elementAt(j).getWeight()) {
                     TIE = false;
                 }
             }
@@ -198,23 +202,23 @@ public class Graph_algo {
         return TIE;
     }
 
+    /**
+     * 
+     * @return string with the statistics of the graph
+     * (number of nodes, number of edges, radius, diameter, is there is a TIE)
+     */
     public String getStatistics() {
-        double diameter = 0, radius = 0, time = 0;
-        //long start = System.currentTimeMillis();
+        double diameter = 0, radius = 0;
         radius = findRadius()[2];
         diameter = findDiameter()[2];
-        String isTie;
+        String isTie= "!TIE";
         if (isTriangleInequality()) {
             isTie = "TIE";
-        } else {
-            isTie = "!TIE";
         }
-        //long end = System.currentTimeMillis();
-        return "Graph: |V|= " +this.numOfNodes+ ", |E| = " + this.numOfEdges + ", " + isTie + ", Radius:" + radius + ",diamter: " + diameter;
+        return "Graph: |V|= " + this.numOfNodes + ", |E| = " + this.numOfEdges + ", " + isTie + ", Radius:" + radius + ", diameter: " + diameter;
     }
 
     public Vector<Integer>[] readTestFile(String fileName) {
-        
         Vector<Integer>[] queries = null;
         String s = "";
         int numOfQueries, nodeI, nodeJ, BLSize;
@@ -256,29 +260,37 @@ public class Graph_algo {
         ArrayList<Integer> blackList;
         int BLPointer = 2;
         double dis;
-        String info="";
-        for (int i = 0; i < queries.length; i++) {
-            if (queries[i].firstElement() == -1) {//if we need the info
-                info=getStatistics();
-            } else {
-                /////////////////לכתוב לקובץ את כל השורה מהוקטור
-                for (int k = 0; k < queries[i].size(); k++) {
-                    System.out.print(queries[i].get(k) + " ");
+        String info = "";
+        File answerFile = new File(AnswerFileName);
+        try {
+            FileWriter fw = new FileWriter(answerFile);
+            BufferedWriter bw = new BufferedWriter(fw);
+            for (int i = 0; i < queries.length; i++) {
+                if (queries[i].firstElement() == -1) {//if we need the info
+                    info = getStatistics();
+                } else {
+                    for (int k = 0; k < queries[i].size(); k++) {
+                        System.out.print(queries[i].get(k) + " ");
+                        bw.write(queries[i].get(k)+" ");
+                    }
+                    blackList = new ArrayList<Integer>();
+                    for (int j = 0; j < queries[i].elementAt(BLPointer); j++) {//go throghe the black list
+                        blackList.add(queries[i].elementAt(BLPointer + j + 1));
+                    }
+                    dis = distanceWithBlackList(queries[i].elementAt(0), queries[i].elementAt(1), blackList);
+                    bw.write(dis+"\n");
                 }
-                ////////////////////////
-                blackList = new ArrayList<Integer>();
-                for (int j = 0; j < queries[i].elementAt(BLPointer); j++) {//go throghe the black list
-                    blackList.add(queries[i].elementAt(BLPointer + j + 1));
-                }
-                dis = distanceWithBlackList(queries[i].elementAt(0), queries[i].elementAt(1), blackList);
-                ///////////לכתוב לקובץ את המרחק באותה שורה
-                System.out.println(dis);
-                ////////////////////
             }
+            long end = System.currentTimeMillis();
+            info = info + ", Runtime: " + (end - start) + " ms";
+           // System.out.println(info);//////////להדפיס לקובץ
+            bw.write(info);
+            bw.flush();
+            bw.close();
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
-        long end = System.currentTimeMillis();
-         info=info+ ", Runtime: " + (end - start) + " ms";
-         System.out.println(info);//////////להדפיס לקובץ
     }
     /*
      public static void main(String[] args) {
