@@ -29,9 +29,12 @@ public class Graph {
     }
 
     /**
-     * 
-    the function get the fileName of the graph, reads it from the file and set it in the 
-    */
+     * the function get the fileName of the graph, reads it from the file and
+     * set it in the
+     *
+     * @param fileName- the name of the file with the graph
+     * @return Array of nodes that represent the graph
+     */
     public Nodes[] readGraphFromFile(String fileName) {
         String s = "";
         int nodeI = 0, nodeJ = 0;
@@ -62,25 +65,20 @@ public class Graph {
         } catch (Exception e) {
             e.printStackTrace();
         }
-return this.graph;
-    }
-
-    public Nodes []getGraph(){
         return this.graph;
     }
-    
-    public int getNumOfNodes(){
+
+    public Nodes[] getGraph() {
+        return this.graph;
+    }
+
+    public int getNumOfNodes() {
         return this.numOfNodes;
     }
-    
-    public int getNumOfEdges(){
+
+    public int getNumOfEdges() {
         return this.numOfEdges;
     }
-    public static void main(String[] args) {
-        Graph g = new Graph();
-        g.readGraphFromFile("B:\\ליאת\\מדמח\\מבנה תוכנה\\G000.txt");
-    }
+
+    
 }
-
-
-
