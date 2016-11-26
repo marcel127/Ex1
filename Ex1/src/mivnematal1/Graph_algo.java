@@ -46,7 +46,7 @@ public class Graph_algo {
      * @param root the start node
      */
     public void dijikstraAlgo(int root) {
-       
+
         graph[root].setMinDistance(0);
         queue.add(graph[root]);
         while (!queue.isEmpty()) {
@@ -203,21 +203,28 @@ public class Graph_algo {
     }
 
     /**
-     * 
-     * @return string with the statistics of the graph
-     * (number of nodes, number of edges, radius, diameter, is there is a TIE)
+     *
+     * @return string with the statistics of the graph (number of nodes, number
+     * of edges, radius, diameter, is there is a TIE)
      */
     public String getStatistics() {
         double diameter = 0, radius = 0;
         radius = findRadius()[2];
         diameter = findDiameter()[2];
-        String isTie= "!TIE";
+        String isTie = "!TIE";
         if (isTriangleInequality()) {
             isTie = "TIE";
         }
         return "Graph: |V|= " + this.numOfNodes + ", |E| = " + this.numOfEdges + ", " + isTie + ", Radius:" + radius + ", diameter: " + diameter;
     }
 
+    
+    /**
+     * the function reads the queries from the text file and insert them into vector
+     * if the query is "info", insert "-1"
+     * @param fileName: the name of the queries file
+     * @return vector with all the queries
+     */
     public Vector<Integer>[] readTestFile(String fileName) {
         Vector<Integer>[] queries = null;
         String s = "";
@@ -254,6 +261,12 @@ public class Graph_algo {
         return queries;
     }
 
+    /**
+     * the function reads the queries and writes the answers to a new file
+     *
+     * @param queryFileName: the name of the query file
+     * @param AnswerFileName : the name of the answer file
+     */
     public void QandA(String queryFileName, String AnswerFileName) {
         long start = System.currentTimeMillis();
         Vector<Integer>[] queries = readTestFile(queryFileName);
@@ -261,46 +274,34 @@ public class Graph_algo {
         int BLPointer = 2;
         double dis;
         String info = "";
-        File answerFile = new File(AnswerFileName);
+        File answerFile = new File(AnswerFileName);//creates new file of the answers
         try {
             FileWriter fw = new FileWriter(answerFile);
             BufferedWriter bw = new BufferedWriter(fw);
             for (int i = 0; i < queries.length; i++) {
-                if (queries[i].firstElement() == -1) {//if we need the info
+                if (queries[i].firstElement() == -1) {//check if we need the info
                     info = getStatistics();
-                } else {
+                    long end = System.currentTimeMillis();
+                    info = info + ", Runtime: " + (end - start) + " ms";
+                    bw.write(info);
+                } else {//if we need to check distance between points
                     for (int k = 0; k < queries[i].size(); k++) {
                         System.out.print(queries[i].get(k) + " ");
-                        bw.write(queries[i].get(k)+" ");
+                        bw.write(queries[i].get(k) + " ");//writes the query to the anwer file
                     }
                     blackList = new ArrayList<Integer>();
                     for (int j = 0; j < queries[i].elementAt(BLPointer); j++) {//go throghe the black list
                         blackList.add(queries[i].elementAt(BLPointer + j + 1));
                     }
                     dis = distanceWithBlackList(queries[i].elementAt(0), queries[i].elementAt(1), blackList);
-                    bw.write(dis+"\n");
+                    bw.write(dis + "\n");//writes the answer to the file
                 }
             }
-            long end = System.currentTimeMillis();
-            info = info + ", Runtime: " + (end - start) + " ms";
-           // System.out.println(info);//////////להדפיס לקובץ
-            bw.write(info);
             bw.flush();
             bw.close();
         } catch (Exception e) {
-
             e.printStackTrace();
         }
     }
-    /*
-     public static void main(String[] args) {
-     Graph g = new Graph();
-     Nodes[] tmp = g.readGraphFromFile("B:\\ליאת\\מדמח\\מבנה תוכנה\\G000.txt");
-     Graph_algo graph = new Graph_algo(tmp);
-     double[] ans = graph.findRadius();
-     System.out.println("node1: " + ans[0]);
-     System.out.println("node2: " + ans[1]);
-     System.out.println("ans: " + ans[2]);
-     }
-     */
+
 }
